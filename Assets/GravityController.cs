@@ -3,7 +3,6 @@ using UnityEngine;
 public class GravityController : MonoBehaviour
 {
     public Vector3 gravityDirection = Vector3.down;
-    public float gravityStrength = 20f;
 
     private Vector3 selectedDirection;
 
@@ -16,8 +15,7 @@ public class GravityController : MonoBehaviour
 
     void HandleInput()
     {
-        // Use player-relative directions instead of world directions
-
+        // Preview directions (arrow keys)
         if (Input.GetKeyDown(KeyCode.UpArrow))
         {
             selectedDirection = transform.forward;
@@ -42,21 +40,26 @@ public class GravityController : MonoBehaviour
             ShowHologram();
         }
 
+        // Apply gravity (Enter)
         if (Input.GetKeyDown(KeyCode.Return))
         {
             gravityDirection = selectedDirection.normalized;
-            hologram.SetActive(false);
+
+            if (hologram != null)
+                hologram.SetActive(false);
         }
     }
 
     void ShowHologram()
     {
+        if (hologram == null) return;
+
         hologram.SetActive(true);
 
-        // Place hologram in selected direction
-        hologram.transform.position = transform.position + selectedDirection.normalized * 1.5f;
+        hologram.transform.position =
+            transform.position + selectedDirection.normalized * 1.5f;
 
-        // Make hologram face direction but stay upright
-        hologram.transform.rotation = Quaternion.LookRotation(selectedDirection, transform.up);
+        hologram.transform.rotation =
+            Quaternion.LookRotation(selectedDirection, transform.up);
     }
 }
